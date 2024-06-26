@@ -6,10 +6,14 @@
 # Folders
 _obj
 _test
+build
+.idea
 
 # Architecture specific extensions/prefixes
 *.[568vq]
 [568vq].out
+
+*.out
 
 *.cgo1.go
 *.cgo2.c

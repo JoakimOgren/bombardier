@@ -17,7 +17,7 @@ import (
 	"github.com/cheggaaa/pb"
 	fhist "github.com/codesenberg/concurrent/float64/histogram"
 	uhist "github.com/codesenberg/concurrent/uint64/histogram"
-	uuid "github.com/satori/go.uuid"
+	"github.com/google/uuid"
 )
 
 type bombardier struct {
@@ -210,11 +210,9 @@ func (b *bombardier) prepareTemplate() (*template.Template, error) {
 			"StringToBytes": func(s string) []byte {
 				return []byte(s)
 			},
-			"UUIDV1": uuid.NewV1,
-			"UUIDV2": uuid.NewV2,
-			"UUIDV3": uuid.NewV3,
-			"UUIDV4": uuid.NewV4,
-			"UUIDV5": uuid.NewV5,
+			"UUIDV1": uuid.New,
+			"UUIDV6": uuid.NewV6,
+			"UUIDV7": uuid.NewV7,
 		}).Parse(string(templateBytes))
 
 	if err != nil {
