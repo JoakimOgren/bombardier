@@ -30,3 +30,7 @@ fmt:
 .PHONY: clean
 clean:
 	rm -rf ./build ./cover.out
+
+.PHONY: publish-local
+publish-local:
+	@echo $(shell ./publish.sh)
