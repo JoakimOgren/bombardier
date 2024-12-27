@@ -147,7 +147,7 @@ const (
 {{- if WithLatencies -}}
 ,"percentiles":{
 {{- range $pc, $lat := .Percentiles }}
-{{- if ne $pc 0.5 -}},{{- end -}}
+{{- if ne $pc 0.01 -}},{{- end -}}
 {{- printf "\"%.0f\":%d" (Multiply $pc 100) $lat -}}
 {{- end -}}
 }
@@ -163,8 +163,8 @@ const (
 ,"max":{{ .Max -}}
 ,"percentiles":{
 {{- range $pc, $rps := .Percentiles }}
-{{- if ne $pc 0.5 -}},{{- end -}}
-{{- printf "\"%2.0f\":%f" (Multiply $pc 100) $rps -}}
+{{- if ne $pc 0.01 -}},{{- end -}}
+{{- printf "\"%.0f\":%f" (Multiply $pc 100) $rps -}}
 {{- end -}}
 }}
 {{- end -}}
