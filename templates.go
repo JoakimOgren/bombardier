@@ -36,14 +36,14 @@ func formatFromString(formatSpec string) format {
 
 const (
 	plainTextTemplate = `
-{{- printf "%10v %10v %10v %10v" "Statistics" "Avg" "Stdev" "Max" }}
-{{ with .Result.RequestsStats (FloatsToArray 0.5 0.75 0.9 0.95 0.99) }}
-	{{- printf "  %-10v %10.2f %10.2f %10.2f" "Reqs/sec" .Mean .Stddev .Max -}}
+{{- printf "%10v %10v %10v %10v %10v" "Statistics" "Avg" "Stdev" "Min" "Max" }}
+{{ with .Result.RequestsStats (FloatsToArray 0.01 0.05 0.1 0.25 0.5 0.75 0.9 0.95 0.99) }}
+	{{- printf "  %-10v %10.2f %10.2f %10.2f %10.2f" "Reqs/sec" .Mean .Stddev .Min .Max -}}
 {{ else }}
 	{{- print "  There wasn't enough data to compute statistics for requests." }}
 {{ end }}
-{{ with .Result.LatenciesStats (FloatsToArray 0.5 0.75 0.9 0.95 0.99) }}
-	{{- printf "  %-10v %10v %10v %10v" "Latency" (FormatTimeUs .Mean) (FormatTimeUs .Stddev) (FormatTimeUs .Max) }}
+{{ with .Result.LatenciesStats (FloatsToArray 0.01 0.05 0.1 0.25 0.5 0.75 0.9 0.95 0.99) }}
+	{{- printf "  %-10v %10v %10v %10v %10v" "Latency" (FormatTimeUs .Mean) (FormatTimeUs .Stddev) (FormatTimeUs .Min) (FormatTimeUs .Max) }}
 	{{- if WithLatencies }}
   		{{- "\n  Latency Distribution" }}
 		{{- range $pc, $lat := .Percentiles }}
@@ -138,16 +138,17 @@ const (
 ]
 {{- end -}}
 
-{{- with .LatenciesStats (FloatsToArray 0.5 0.75 0.9 0.95 0.99) -}}
+{{- with .LatenciesStats (FloatsToArray 0.01 0.05 0.1 0.25 0.5 0.75 0.9 0.95 0.99) -}}
 ,"latency":{"mean":{{ .Mean -}}
 ,"stddev":{{ .Stddev -}}
+,"min":{{ .Min -}}
 ,"max":{{ .Max -}}
 
 {{- if WithLatencies -}}
 ,"percentiles":{
 {{- range $pc, $lat := .Percentiles }}
 {{- if ne $pc 0.5 -}},{{- end -}}
-{{- printf "\"%2.0f\":%d" (Multiply $pc 100) $lat -}}
+{{- printf "\"%.0f\":%d" (Multiply $pc 100) $lat -}}
 {{- end -}}
 }
 {{- end -}}
@@ -155,9 +156,10 @@ const (
 }
 {{- end -}}
 
-{{- with .RequestsStats (FloatsToArray 0.5 0.75 0.9 0.95 0.99) -}}
+{{- with .RequestsStats (FloatsToArray 0.01 0.05 0.1 0.25 0.5 0.75 0.9 0.95 0.99) -}}
 ,"rps":{"mean":{{ .Mean -}}
 ,"stddev":{{ .Stddev -}}
+,"min":{{ .Min -}}
 ,"max":{{ .Max -}}
 ,"percentiles":{
 {{- range $pc, $rps := .Percentiles }}

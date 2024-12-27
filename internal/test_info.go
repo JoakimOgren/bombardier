@@ -118,6 +118,7 @@ type LatenciesStats struct {
 	// These are in microseconds
 	Mean   float64
 	Stddev float64
+	Min    float64
 	Max    float64
 
 	// This is  map[0.0 <= p <= 1.0 (percentile)]microseconds
@@ -130,6 +131,7 @@ func (r Results) LatenciesStats(percentiles []float64) *LatenciesStats {
 	h := r.Latencies
 	sum := uint64(0)
 	count := uint64(0)
+	min := uint64(math.MaxUint64)
 	max := uint64(0)
 	pairs := make([]struct{ k, v uint64 }, 0, h.Count())
 
@@ -137,6 +139,9 @@ func (r Results) LatenciesStats(percentiles []float64) *LatenciesStats {
 	h.VisitAll(func(f uint64, c uint64) bool {
 		if f > max {
 			max = f
+		}
+		if f < min {
+			min = f
 		}
 		sum += f * c
 		count += c
@@ -185,6 +190,7 @@ func (r Results) LatenciesStats(percentiles []float64) *LatenciesStats {
 	return &LatenciesStats{
 		Mean:   mean,
 		Stddev: stddev,
+		Min:    float64(min),
 		Max:    float64(max),
 
 		Percentiles: percentilesMap,
@@ -196,6 +202,7 @@ type RequestsStats struct {
 	// These are in requests per second.
 	Mean   float64
 	Stddev float64
+	Min    float64
 	Max    float64
 
 	// This is  map[0.0 <= p <= 1.0 (percentile)](req-s per second)
@@ -208,6 +215,7 @@ func (r Results) RequestsStats(percentiles []float64) *RequestsStats {
 	h := r.Requests
 	sum := float64(0)
 	count := uint64(0)
+	min := float64(math.MaxFloat64)
 	max := float64(0)
 	pairs := make([]struct {
 		k float64
@@ -221,6 +229,9 @@ func (r Results) RequestsStats(percentiles []float64) *RequestsStats {
 		}
 		if f > max {
 			max = f
+		}
+		if f < min && f > 0 {
+			min = f
 		}
 		sum += f * float64(c)
 		count += c
@@ -276,6 +287,7 @@ func (r Results) RequestsStats(percentiles []float64) *RequestsStats {
 	return &RequestsStats{
 		Mean:   mean,
 		Stddev: stddev,
+		Min:    min,
 		Max:    max,
 
 		Percentiles: percentilesMap,
