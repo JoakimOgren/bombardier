@@ -1,9 +1,10 @@
-"c:\Program Files\Go\bin\go.exe" get -u all
-"c:\Program Files\Go\bin\go.exe" mod tidy
-"c:\Program Files\Go\bin\go.exe" test
+set GO_PATH="C:\Program Files\Go\bin\go.exe"
+%GO_PATH% get -u all
+%GO_PATH% mod tidy
+%GO_PATH% test
 set GOARCH=amd64
 set CGO_ENABLED=0
 set GOOS=linux
-"c:\Program Files\Go\bin\go.exe" build -trimpath -ldflags "-s -w -X main.version=1.2.6-joakim"
+%GO_PATH% build -o bombardier-%GOOS%-%GOARCH% -trimpath -ldflags "-s -w -X main.version=1.2.6-joakim"
 set GOOS=windows
-"c:\Program Files\Go\bin\go.exe" build -trimpath -ldflags "-s -w -X main.version=1.2.6-joakim"
+%GO_PATH% build -o bombardier-%GOOS%-%GOARCH%.exe -trimpath -ldflags "-s -w -X main.version=1.2.6-joakim"
