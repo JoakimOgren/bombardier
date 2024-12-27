@@ -6,6 +6,10 @@ With `bombardier v1.1` and higher you can now use `net/http` client if you need 
 
 Tested on go1.18 and higher.
 
+## Fork information
+This fork adds 1st, 5th, 10th and 25th percentiles, as well as minimum value (latency/responses).
+https://github.com/joakimogren/bombardier/
+
 ## Installation
 You can grab binaries in the [releases](https://github.com/codesenberg/bombardier/releases) section.
 Alternatively, to get latest and greatest run:
